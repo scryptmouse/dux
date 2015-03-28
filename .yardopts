@@ -1,0 +1,8 @@
+--private
+--protected
+-m markdown
+lib/**/*.rb
+-
+README.md
+CODE_OF_CONDUCT.md
+LICENSE.txt
