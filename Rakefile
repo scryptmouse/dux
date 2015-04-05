@@ -13,5 +13,4 @@ YARD::Rake::YardocTask.new do |t|
   t.stats_options = ['--list-undoc']
 end
 
-# If you want to make this the default task
 task :default => :spec

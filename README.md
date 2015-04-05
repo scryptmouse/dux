@@ -1,4 +1,4 @@
-# Dux
+# Dux [![Build Status](https://travis-ci.org/scryptmouse/dux.svg?branch=master)](https://travis-ci.org/scryptmouse/dux)
 
 A lazy duck-type matching gem that is particularly designed for use in case statements.
 
