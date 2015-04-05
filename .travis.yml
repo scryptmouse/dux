@@ -2,7 +2,6 @@ language: ruby
 before_install: gem install bundler -v '~> 1.9'
 cache: bundler
 rvm:
-  - 2.0.0
   - 2.1.0
   - 2.2.1
   - ruby-head

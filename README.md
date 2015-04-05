@@ -116,7 +116,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Supported Ruby Versions
 
-* MRI 2.0+
+* MRI 2.1+
 * Rubinius 2.5+
 * jruby-head / 9.0+
 
