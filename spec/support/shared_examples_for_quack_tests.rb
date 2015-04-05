@@ -91,10 +91,12 @@ RSpec.shared_examples 'advanced protected quack tests' do
   include_context 'quack test context'
 
   context 'against a protected method' do
-    let(:secret_duck_method) { duck_method.curry(duck_method.arity.abs)[secret_method] }
+    let(:secret_duck_method) do
+      ->(include_all: false) { duck_method.call(secret_method, include_all: include_all) }
+    end
 
     context 'when include_all is true' do
-      subject { secret_duck_method[include_all: true] }
+      subject { secret_duck_method.call include_all: true }
 
       it 'accepts protected methods' do
         is_expected.to accept blank_test_object
@@ -102,7 +104,7 @@ RSpec.shared_examples 'advanced protected quack tests' do
     end
 
     context 'when include_all is false' do
-      subject { secret_duck_method.call[include_all: false] }
+      subject { secret_duck_method.call include_all: false }
 
       it 'ignores protected methods' do
         is_expected.to_not accept blank_test_object
