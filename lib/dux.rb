@@ -76,8 +76,7 @@ module Dux
     #
     # @return [void]
     def add_flock_methods!
-
-      Array.prepend Dux::FlockMethods
+      Array.__send__ :prepend, Dux::FlockMethods
 
       return nil
     end
@@ -101,7 +100,7 @@ module Dux
     #
     # @return [void]
     def extend_strings!
-      String.prepend Dux::Duckify
+      String.__send__ :prepend, Dux::Duckify
 
       return nil
     end
@@ -110,7 +109,7 @@ module Dux
     #
     # @return [void]
     def extend_symbols!
-      Symbol.prepend Dux::Duckify
+      Symbol.__send__ :prepend, Dux::Duckify
 
       return nil
     end
@@ -132,7 +131,7 @@ module Dux
     def array_shorthand!
       add_flock_methods!
 
-      Array.prepend Dux::HacksLikeADuck
+      Array.__send__ :prepend, Dux::HacksLikeADuck
 
       nil
     end
@@ -143,7 +142,7 @@ module Dux
     # @return [void]
     def string_shorthand!
       extend_strings!
-      String.prepend Dux::HacksLikeADuck
+      String.__send__ :prepend, Dux::HacksLikeADuck
 
       nil
     end
@@ -155,7 +154,7 @@ module Dux
     def symbol_shorthand!
       extend_symbols!
 
-      Symbol.prepend Dux::HacksLikeADuck
+      Symbol.__send__ :prepend, Dux::HacksLikeADuck
 
       return nil
     end
