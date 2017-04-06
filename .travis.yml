@@ -1,4 +1,5 @@
 language: ruby
+dist: trusty
 before_install: gem install bundler -v '~> 1.14'
 cache: bundler
 rvm:
@@ -7,5 +8,5 @@ rvm:
   - 2.3.0
   - 2.4.0
   - ruby-head
-  - rbx-2
+  - rbx-3.73
   - jruby-head
