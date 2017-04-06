@@ -1,9 +1,11 @@
 language: ruby
-before_install: gem install bundler -v '~> 1.9'
+before_install: gem install bundler -v '~> 1.14'
 cache: bundler
 rvm:
   - 2.1.0
   - 2.2.1
+  - 2.3.0
+  - 2.4.0
   - ruby-head
   - rbx-2
   - jruby-head
