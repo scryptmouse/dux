@@ -1,7 +1,16 @@
+require 'delegate'
+
 require 'dux/version'
+require 'dux/inspect_id'
+require 'dux/null_object'
+require 'dux/attempt'
+require 'dux/blankness'
 require 'dux/duckify'
 require 'dux/hacks_like_a_duck'
 require 'dux/flock_methods'
+
+require 'dux/indifferent_string'
+require 'dux/enum'
 
 # Super simple duck-type testing.
 module Dux

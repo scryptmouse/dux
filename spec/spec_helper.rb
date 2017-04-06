@@ -1,4 +1,4 @@
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'bundler/setup'
 
 if RUBY_PLATFORM != 'java'
   require 'simplecov'
