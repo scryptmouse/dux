@@ -1,7 +1,7 @@
-describe Dux do
+RSpec.describe Dux do
   include_context 'test objects and methods'
 
-  quack_test_for '#dux', with: Dux.method(:dux)
+  quack_test_for '.dux', with: Dux.method(:dux)
   quack_test_for '.[]', with: Dux.method(:[])
 
   dux_flock_test :all

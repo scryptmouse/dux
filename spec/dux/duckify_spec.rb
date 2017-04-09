@@ -1,4 +1,4 @@
-describe Dux::Duckify do
+RSpec.describe Dux::Duckify do
   before(:all) do
     Dux.extend_strings_and_symbols!
   end

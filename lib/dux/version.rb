@@ -1,4 +1,4 @@
 module Dux
   # Gem version.
-  VERSION = "0.3.0"
+  VERSION = "0.8.0"
 end

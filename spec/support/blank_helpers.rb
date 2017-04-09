@@ -1,20 +1,19 @@
-require 'pry'
-
 module DuxTesting
   module BlankHelpers
     NOTHING = Object.new.freeze
 
     module SpecMethods
       def test_blankness_of(value: NOTHING, expectation:, description: nil, &block)
-        label = if description.nil?
-                  unless value.equal?(NOTHING)
-                    "`#{value.inspect}`"
-                  else
-                    raise 'Provide a description when block is given'
-                  end
-                else
-                  description.to_s
-                end
+        label =
+          if description.nil?
+            unless value.equal?(NOTHING)
+              "`#{value.inspect}`"
+            else
+              raise 'Provide a description when block is given'
+            end
+          else
+            description.to_s
+          end
 
         specify(label) do
           test_method(:blankish?, value: value, &block).to ( expectation ? be_truthy : be_falsey )
@@ -53,7 +52,7 @@ module DuxTesting
             instance_eval(&block)
           end
 
-        expect(described_class.__send__(method_name, actual_value))
+        expect(Dux.__send__(method_name, actual_value))
       end
     end
   end

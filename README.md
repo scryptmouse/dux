@@ -1,6 +1,6 @@
 # Dux [![Build Status](https://travis-ci.org/scryptmouse/dux.svg?branch=master)](https://travis-ci.org/scryptmouse/dux)
 
-A lazy duck-type matching gem that is particularly designed for use in case statements.
+A swiss-army knife of duck-type and utility objects without monkey-patching.
 
 ## Installation
 
@@ -18,26 +18,203 @@ Or install it yourself as:
 
     $ gem install dux
 
-## Usage
+## Dux[] / Predicates
 
-Usage is straightforward out of the box:
+`Dux[]` can be used for creating predicate matchers for case equality.
+It will check if whatever it is compared against can `respond_to?` the
+symbol it's provided with.
 
-```ruby
-case foo
-when Dux[:bar] then foo.bar
-when Dux[:baz] then foo.baz
-when Dux[:quux] then foo.quux
-end
-```
-
-It also has some methods for matching against a strict interface:
+Usage is straightforward:
 
 ```ruby
 case foo
-when Dux.all(:bar, :baz) then foo.bar && foo.baz
-when Dux.any(:quux, :bloop) then foo.try(:quux) || foo.try(:bloop)
+when Dux[:bar]
+  foo.bar
+when Dux[:baz]
+  foo.baz
+when Dux[:quux]
+  foo.quux
+else
+  raise TypeError, "Dunno what do to do with #{foo.inspect}"
 end
 ```
+
+Because it uses lambdas under the hood, it can also be used
+as an enumerable predicate:
+
+```ruby
+list_of_objects_that_should_conform.all?(&Dux[:some_method])
+```
+
+That's not the intended usage, but it works.
+
+### Inheritance / Inclusion / Extension
+
+There are also predicates for testing class structure:
+
+```ruby
+class SomeClass < SomeParentClass
+  extend SomeDSLMethods
+  include SomeHelpers
+  prepend SomeOverrides
+end
+
+Dux.inherits(SomeParentClass) === SomeClass # => true
+Dux.inherits(SomeHelpers) === SomeClass # => true
+Dux.inherits(SomeOverrides) === SomeClass # => true
+
+# If you want to use Module#<= in the predicate, use include_self: true
+Dux.inherits(SomeClass, include_self: true) === SomeClass # => true
+
+# Testing for module extension is different.
+Dux.extends(SomeDSLMethods) === SomeClass # => true
+```
+
+`Dux.inherits` is aliased to `Dux.prepends` and `Dux.includes`
+for semantic clarity, but it does not currently check
+if a module was included or prepended.
+
+### Interfaces
+
+There are also some methods for matching against a strict / flexible interface:
+
+```ruby
+case foo
+when Dux.all(:bar, :baz)
+  foo.bar && foo.baz
+when Dux.any(:quux, :bloop)
+  Dux.attempt(foo, :quux) || Dux.attempt(foo, :bloop)
+end
+```
+
+### YARD Types
+
+If you have a condition more easily expressed in [YARD types](http://yardoc.org/types),
+you can do something like the following:
+
+```ruby
+case some_overloaded_arg
+when Dux.yard('(Symbol, Symbol)')
+  # Do something with a tuple of two symbols
+when Dux.yard('{ Symbol => <Symbol> }')
+  # Do something with a symbol-keyed hash with
+  # values that are an array of symbols
+when Dux.yard('<SomeClass>')
+  # Do something with an array of `SomeClass` members
+end
+```
+
+Performance of the underlying gem is not thoroughly tested,
+but it should work just fine for non-intensive use cases.
+
+## Dux.comparable
+
+Simplifies creating comparable objects when just want
+to compare on a couple of attributes defined on objects.
+
+```ruby
+class Person < Struct.new(:name)
+  include Dux.comparable :name
+end
+
+alice = Person.new 'Alice'
+bob   = Person.new 'Bob'
+carol = Person.new 'Carol'
+
+[bob, carol, alice].sort == [alice, bob, carol]
+
+# You can also sort descending:
+
+Person.include Dux.comparable :name, sort_order: :desc
+
+[alice, carol, bob].sort == [carol, bob, alice]
+```
+
+You can additionally specify multiple attributes with
+individual sort ordering for each attribute:
+
+```ruby
+class Person < Struct.new(:name, :salary)
+  include Dux.comparable [:salary, :desc], :name
+end
+
+alice = Person.new 'Alice', 100_000
+bob   = Person.new 'Bob', 75_000
+carol = Person.new 'Carol', 100_000
+
+[carol, bob, alice].sort == [alice, carol, bob]
+```
+
+## Dux.enum
+
+Create an indifferent set of strings/symbols that can be used
+to validate options.
+
+```ruby
+ROLES = Dux.enum :author, :admin, :reader
+
+ROLES[:author] # => :author
+ROLES[:nonexistent] # raises Dux::Enum::NotFound
+
+ROLES.fetch :nonexistent do |value|
+  raise YourErrorHere, "Invalid role: #{value}"
+end
+```
+
+If you want a specific fallback value instead of raising an error, you can do that too
+
+```ruby
+ROLES = Dux.enum :author, :admin, :reader, default: :reader
+
+ROLES[:nonexistent] # => :reader
+
+# Override the fallback for a particular fetch
+ROLES[:nonexistent, fallback: :author] # => :author
+```
+
+## Utilities
+
+Small utility methods, many to replace needing ActiveSupport / monkey patching.
+
+### Dux.attempt
+
+`Object#try` when you don't have/want ActiveSupport.
+
+It will attempt to execute a provided method (with optional args and block)
+with `public_send`, or simply return `nil` if it doesn't respond.
+
+```ruby
+Dux.attempt(some_object, :method, *args, &block)
+```
+
+### Dux.blankish? / Dux.presentish?
+
+`Object#blank?` & `Object#present?` when you don't have/want ActiveSupport.
+
+Rather than being monkey patched across all `Object`s, you will need to
+use `Dux` to check:
+
+```ruby
+Dux.blankish? [nil] # => true
+Dux.blankish? Hash.new # => true
+Dux.blankish? "\t" # => true
+Dux.blankish? Float::NAN
+```
+
+### Dux.inspect_id
+
+If you are overriding the `#inspect` method on an object and want
+to keep that unique hex `object_id`, this offers a shorthand:
+
+```ruby
+def inspect
+  "#<YourClassHere:#{Dux.inspect_id(self)}>"
+end
+```
+
+## Monkey patches / Experimental
+
+These will probably end up getting removed for version 1.x.
 
 ### Core Extensions
 
@@ -75,7 +252,7 @@ when %i[quux bloop].duckify(type: :any) then foo.try(:quux) || foo.try(:bloop)
 end
 ```
 
-#### Shorthand
+#### ~ Shorthand
 
 There is an experimental option that uses unary `~` as an alias for `#duckify`.
 
@@ -116,7 +293,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Supported Ruby Versions
 
-* MRI 2.1+
+* MRI 2.2+
 * Rubinius 2.5+
 * jruby-head / 9.0+
 

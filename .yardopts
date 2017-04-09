@@ -1,3 +1,6 @@
+--embed-mixin Dux::Attempt
+--embed-mixin Dux::Blankness
+--embed-mixin Dux::InspectID
 --private
 --protected
 -m markdown

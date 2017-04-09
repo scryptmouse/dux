@@ -1,6 +1,13 @@
 module Dux
+  # `Object#blank?` and `Object#present?` replacements for when
+  # working outside of ActiveSupport.
+  #
+  # @api private
   module Blankness
+    # A string containing only whitespace (as defined by unicode).
     WHITESPACE_ONLY = /\A[[:space:]]+\z/
+
+    private_constant :WHITESPACE_ONLY
 
     # Check if a provided object is semantically empty.
     #
@@ -32,7 +39,7 @@ module Dux
     def presentish?(value)
       !blankish?(value)
     end
-
-    extend self
   end
+
+  extend Blankness
 end

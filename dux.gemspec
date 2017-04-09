@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Alexa Grey"]
   spec.email         = ["devel@mouse.vc"]
 
-  spec.summary       = %q{Lazy duck-type matching}
+  spec.summary       = %q{Swiss-army knife gem for duck-type matching and utility methods}
   spec.homepage      = "https://github.com/scryptmouse/dux"
   spec.license       = "MIT"
 
@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.metadata["yard.run"] = "yri"
 
-  spec.add_dependency "lru_redux"
+  spec.add_dependency "yard_types"
 
   spec.add_development_dependency "bundler",    "~> 1.9"
   spec.add_development_dependency "rspec",      "~> 3.5"

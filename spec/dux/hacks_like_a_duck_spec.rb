@@ -1,4 +1,4 @@
-describe Dux::HacksLikeADuck do
+RSpec.describe Dux::HacksLikeADuck do
   include_context 'test objects and methods'
 
   before do

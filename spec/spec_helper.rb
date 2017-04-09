@@ -1,5 +1,7 @@
 require 'bundler/setup'
 
+require 'pry'
+
 if RUBY_PLATFORM != 'java'
   require 'simplecov'
 
@@ -8,6 +10,7 @@ if RUBY_PLATFORM != 'java'
     add_filter "spec/support"
   end
 end
+
 
 require 'dux'
 

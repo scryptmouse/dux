@@ -1,4 +1,4 @@
-RSpec.describe Dux::Blankness do
+RSpec.describe 'Dux::Blankness' do
   include_context 'testing blankness'
 
   let(:empty_object) { double('empty object', :empty? => true) }
