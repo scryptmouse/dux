@@ -3,10 +3,16 @@ dist: trusty
 before_install: gem install bundler -v '~> 1.14'
 cache: bundler
 rvm:
-  - 2.1
-  - 2.2
-  - 2.3
-  - 2.4
-  - ruby-head
-  - rbx-3.73
-  - jruby-head
+- 2.1
+- 2.2
+- 2.3
+- 2.4
+- ruby-head
+- rbx-3.73
+- jruby-head
+notifications:
+  email:
+    on_success: never
+    on_failure: always
+  slack:
+    secure: dyiEl/gyiMNanOX6bjHgevmWTYwGKXr0EQA6/AqWIr+FrlklKZsuQSLffbv3aBQixjLimay5ZNrpdUdU3P8woCMHudgTZ8EE/kYvOcdqdtZfQjoTcRTwrrPICqcCs1HMplnGjoHIlvGqYAcE0thILyhFWhw1PIjXi1eI2GuNgr8=
